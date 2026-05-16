@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Гид по Сусанино</title>
+<style>
+  :root {
+    --bg: #f7f4ef; --surface: #ffffff; --text: #1e1b16; --text2: #5c564c;
+    --accent: #6a1b9a; --accent2: #8e24aa; --border: #e0dbd0;
+    --shadow: 0 2px 16px rgba(0,0,0,.06); --card-hover: 0 8px 32px rgba(0,0,0,.1);
+    --hero-bg: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #4a2c6e 70%, #7b1fa2 100%);
+    --tag-bg: #f3e5f5; --tag-text: #6a1b9a;
+  }
+  [data-theme="dark"] {
+    --bg: #151310; --surface: #1f1c18; --text: #e8e0d0; --text2: #a89c80;
+    --accent: #ce93d8; --accent2: #ba68c8; --border: #3a3328;
+    --shadow: 0 2px 16px rgba(0,0,0,.25); --card-hover: 0 8px 32px rgba(0,0,0,.4);
+    --hero-bg: linear-gradient(135deg, #0a0515 0%, #120a22 40%, #1a0e2e 100%);
+    --tag-bg: #2d1b4e; --tag-text: #ce93d8;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .3s,color .3s}
+  .hero{background:var(--hero-bg);color:#fff;padding:48px 20px 40px;text-align:center;position:relative;overflow:hidden}
+  .hero::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:40px;background:var(--bg);border-radius:40px 40px 0 0}
+  .hero .emoji{font-size:56px;margin-bottom:8px}
+  .hero h1{font-size:clamp(24px,5vw,40px);font-weight:700;letter-spacing:-.5px}
+  .hero p{font-size:16px;opacity:.85;max-width:550px;margin:8px auto 0}
+  .theme-toggle{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:#fff;width:40px;height:40px;border-radius:20px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2}
+  .theme-toggle:hover{background:rgba(255,255,255,.25)}
+  .container{max-width:720px;margin:-20px auto 0;padding:0 16px 60px;position:relative;z-index:1}
+  .search-wrap{margin-bottom:20px;position:relative}
+  .search-input{width:100%;padding:14px 18px 14px 44px;border:2px solid var(--border);border-radius:16px;background:var(--surface);color:var(--text);font-size:16px;outline:none;transition:border-color .2s;box-shadow:var(--shadow)}
+  .search-input:focus{border-color:var(--accent)}
+  .search-wrap::before{content:'🔍';position:absolute;left:14px;top:14px;font-size:16px;z-index:1}
+  .search-input::placeholder{color:var(--text2)}
+  .grid{display:flex;flex-direction:column;gap:14px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);cursor:pointer;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-2px);box-shadow:var(--card-hover)}
+  .card.active{border-color:var(--accent)}
+  .card-header{display:flex;align-items:center;gap:14px;padding:18px 20px}
+  .card-num{width:44px;height:44px;border-radius:14px;background:var(--tag-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+  .card-title-wrap{flex:1;min-width:0}
+  .card-title{font-size:17px;font-weight:600;color:var(--text);line-height:1.3}
+  .card-subtitle{font-size:13px;color:var(--text2);margin-top:2px}
+  .card-arrow{color:var(--text2);font-size:14px;transition:transform .3s;flex-shrink:0}
+  .card.active .card-arrow{transform:rotate(90deg)}
+  .card-body{display:none;padding:0 20px 20px;border-top:1px solid var(--border);padding-top:16px}
+  .card.active .card-body{display:block}
+  .card-body p{font-size:15px;color:var(--text);margin-bottom:12px;line-height:1.7}
+  .card-images{display:flex;gap:10px;overflow-x:auto;margin:12px 0;padding-bottom:4px;scroll-snap-type:x mandatory}
+  .card-images img{width:200px;height:140px;object-fit:cover;border-radius:12px;flex-shrink:0;scroll-snap-align:start;border:1px solid var(--border)}
+  .audio-wrap{margin:12px 0}
+  .audio-wrap audio{width:100%;height:40px;border-radius:12px}
+  .links-list{margin-top:10px}
+  .links-list a{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;margin:4px 4px 4px 0;background:var(--tag-bg);color:var(--tag-text);border-radius:10px;text-decoration:none;font-size:13px;font-weight:500}
+  .links-list a:hover{filter:brightness(.95)}
+  .facts{margin-top:8px}
+  .fact{background:var(--tag-bg);border-radius:10px;padding:10px 14px;margin-bottom:6px;font-size:14px;color:var(--text)}
+  .fact::before{content:'💡 '}
+  .footer{text-align:center;padding:30px 20px;color:var(--text2);font-size:13px}
+  .footer a{color:var(--accent);text-decoration:none}
+  .empty-search{text-align:center;padding:40px 20px;color:var(--text2)}
+  @media(min-width:600px){.card-images img{width:260px;height:170px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <button class="theme-toggle" onclick="toggleTheme()" title="Тёмный/светлый режим" aria-label="Сменить тему">🌓</button>
+  <div class="emoji">🚂</div>
+  <h1>Гид по Сусанино</h1>
+  <p>Дачный посёлок в Гатчинском районе — от финской деревушки до «сердца» Ленинградской области</p>
+</header>
+
+<div class="container">
+  <div class="search-wrap">
+    <input type="text" class="search-input" placeholder="Найти тему..." oninput="filterCards(this.value)">
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="footer">
+  Сусанино, Гатчинский район, Ленинградская область · <a href="https://github.com/MrDerunov/susanino-guide" target="_blank">GitHub</a>
+</div>
+
+<script>
+const topics = [
+  {
+    id:1,emoji:"🌲",title:"Малая Ковшовка",
+    subtitle:"Откуда взялось название и кто здесь жил",
+    text:`<p>До 1913 года посёлок назывался <strong>Малая Ковшовка</strong> (также Малая Ковшова, Высоцкое). Это была крошечная деревня — в 1856 году <strong>всего 1 двор и 8 душ</strong> мужского пола. К 1888 году мызой владели крестьяне с финскими фамилиями — <strong>А. С., И. С. и П. С. Лукконе</strong>, что напоминает об ингерманландском прошлом этих земель.</p>
+    <p>Земли исторически входили в <strong>Новгородское княжество</strong> (первые поселенцы с конца XIV века), затем — в шведскую Ингерманландию (с 1617), а при Петре стали частью Санкт-Петербургской губернии. Коренное население — финно-угорские племена (ижора, водь) и ингерманландские финны.</p>`,
+    facts:["1856: деревня Малая Ковшовка — 1 двор, 8 мужчин","Финские фамилии владельцев: Лукконе, Кириллов","Земли входили в Новгородскую республику и шведскую Ингерманландию"],
+    links:[{label:"Wikipedia: Сусанино",url:"https://ru.wikipedia.org/wiki/Сусанино_(Ленинградская_область)"},{label:"История поселения",url:"https://alvish.ru/832/2010/12/15/"}],
+    images:[]
+  },
+  {
+    id:2,emoji:"👑",title:"Имя героя",
+    subtitle:"Почему Сусанино — и при чём тут Романовы",
+    text:`<p>В <strong>1913 году</strong> станцию Малая Ковшовка переименовали в <strong>Сусанино</strong> — в честь 300-летия дома Романовых и подвига Ивана Сусанина. В 1914 году название перешло и на посёлок, по ходатайству дачников и местных жителей.</p>
+    <p>Важно: это <strong>не место подвига Сусанина</strong>! Настоящее Сусанино (бывшее село Молвитино) — в Костромской области. Гатчинское Сусанино — дань патриотической моде начала XX века на «романовские» названия железнодорожных станций. Тем не менее, имя прижилось и стало важной частью местной идентичности.</p>`,
+    facts:["1913: станция переименована в честь 300-летия дома Романовых","1914: посёлок официально стал Сусанино","Сам Сусанин — из Костромской области; здесь — память, а не место подвига"],
+    links:[{label:"Википедия: платформа",url:"https://ru.wikipedia.org/wiki/Сусанино_(платформа)"}],
+    images:[]
+  },
+  {
+    id:3,emoji:"🚂",title:"Вокзал-памятник",
+    subtitle:"Единственный сохранившийся дореволюционный вокзал линии Петербург–Дно",
+    text:`<p>Каменный вокзал станции Сусанино построен в <strong>1913 году</strong>. Это <strong>единственный сохранившийся дореволюционный вокзал</strong> на всей линии Санкт-Петербург — Дно (Витебское направление): остальные были разрушены в войну или снесены. На фасаде сохранился нивелировочный знак 1913 года.</p>
+    <p>В <strong>2022 году</strong> здание включено в список <strong>выявленных объектов культурного наследия России</strong>. Станция открылась в 1904 году на линии Общества Московско-Виндаво-Рыбинской железной дороги, а в 1962 году была электрифицирована. Сегодня это остановочный пункт в часе езды от Витебского вокзала Петербурга.</p>`,
+    facts:["Построен в 1913, каменный, стиль модерн","Единственный сохранившийся вокзал на линии СПб–Дно","Объект культурного наследия с 2022 года"],
+    links:[{label:"Википедия: платформа",url:"https://ru.wikipedia.org/wiki/Сусанино_(платформа)"},{label:"LiveJournal: фотоотчёт",url:"https://pohod-vosemvrat.livejournal.com/368620.html"},{label:"Дзен: вокзал",url:"https://dzen.ru/a/Y1bjBdKS4XKA4eRJ"}],
+    images:[]
+  },
+  {
+    id:4,emoji:"⛪",title:"Казанский храм",
+    subtitle:"Церковь, пережившая войну и закрытия",
+    text:`<p>Храм Казанской иконы Божией Матери построен в <strong>1908–1910 годах</strong> по проекту архитектора Б. Н. Басина. Средства (до 40 000 рублей) пожертвовала петербургская домовладелица Александра Семёнова. Кирпичная однокупольная церковь в стиле эклектики с элементами модерна и неорусского стиля была освящена епископом Вениамином (Казанским).</p>
+    <p>Храм пережил закрытие в 1939 году, немецкую оккупацию (богослужения возобновились при немцах в октябре 1941-го), снова закрытие эсэсовцами… и всё же уцелел. С 1940-х действует непрерывно. Именно сюда приезжали на службы жители Пушкина, где в советское время не было открытых храмов. Сейчас — действующий храм Гатчинской епархии.</p>`,
+    facts:["Построен в 1910, архитектор Б. Н. Басин","40 000 руб. пожертвовала Александра Семёнова","Закрыт в 1939, открыт в оккупацию, действует поныне"],
+    links:[{label:"Соборы.ру",url:"https://sobory.ru/article/?object=01274"},{label:"Азбука веры",url:"https://azbyka.ru/palomnik/Церковь_Казанской_иконы_Божией_Матери_(Сусанино)"}],
+    images:[]
+  },
+  {
+    id:5,emoji:"🎭",title:"Дачный театр",
+    subtitle:"Любительская сцена, немое кино и трагический финал",
+    text:`<p>В 1908 году в посёлке образовалась <strong>любительская театральная труппа</strong> из дачной интеллигенции, станционных служащих и крестьян. В 1914 году на 4-й линии построили деревянное здание театра на <strong>200 мест</strong>. Руководил труппой учитель приходской школы Иван Мухин. Уже в 1915 году здесь прошёл первый в этих местах сеанс немого кино.</p>
+    <p>В 1926–1928 годах в театре работал тапёр <strong>Борис Плисов</strong>, игравший на пианино под немые фильмы и на танцах (впоследствии — блокадник). К сожалению, к концу 1930-х здание обветшало, и <strong>19 января 1938 года</strong> в нём обрушилась крыша. Ремонт не был произведён, и театр был утрачен. Сегодня традицию продолжает любительский театр «Добрые сердца» при КДЦ.</p>`,
+    facts:["1908: любительская труппа; 1914: деревянный театр на 200 мест","1915: первый сеанс немого кино в этих местах","1938: обрушение крыши, театр утрачен"],
+    links:[{label:"Гатчинская правда: история театра",url:"https://gtn-pravda.ru/2023/04/06/istorija-teatralnoy-zhizni-poselka-susanino.html"}],
+    images:[]
+  },
+  {
+    id:6,emoji:"⚔️",title:"Война и освобождение",
+    subtitle:"Сентябрь 1941, воздушный бой и оккупация",
+    text:`<p>В сентябре 1941 года Сусанино стало ареной ожесточённых боёв. <strong>90-я стрелковая дивизия</strong> (осталось ~1000 бойцов из 14 500) несколько дней сдерживала наступление немецкой <strong>дивизии СС «Полицай»</strong>. <strong>15 сентября 1941 года</strong> посёлок был занят — началась оккупация, продлившаяся до 26 января 1944 года.</p>
+    <p><strong>23 февраля 1942 года</strong> в небе над Сусанино произошёл героический воздушный бой. Лётчики 158-го истребительного авиаполка — ст. лейтенант <strong>Овчинников</strong> и лейтенант <strong>Саталкин</strong> — на Як-1Б вступили в бой с тремя «Мессершмиттами», прикрывавшими 20 бомбардировщиков. Оба погибли, но задание выполнили. Немецкий комендант, восхищённый мужеством, приказал похоронить Саталкина с почестями. В посёлке — братская могила 50 советских воинов.</p>`,
+    facts:["Сентябрь 1941: бои 90-й СД против дивизии СС «Полицай»","15.09.1941 — 26.01.1944: оккупация","23.02.1942: воздушный бой Овчинникова и Саталкина"],
+    links:[{label:"Оборона Сусанино (1941)",url:"https://gatchina-news.ru/novosti/oborona-semrino-i-susanino-v-1941-godu/"},{label:"Воздушный бой 1942",url:"https://gtn-pravda.ru/2020/02/26/vozdushniy-boy-v-nebe-nad-susanino-i-pokrovskoy.html"}],
+    images:[]
+  },
+  {
+    id:7,emoji:"🙏",title:"Любушка Сусанинская",
+    subtitle:"Блаженная старица, к которой ехала вся Россия",
+    text:`<p>Одна из самых известных личностей Сусанино — <strong>блаженная старица Любушка</strong> (Любовь Ивановна Лазарева, 1912–1997). Около 1983 года она поселилась в домике возле Казанского храма. Приняв на себя подвиг юродства Христа ради, Любушка стала известна прозорливостью и исцелениями по молитвам.</p>
+    <p>К ней приезжали за советом и утешением со всей страны. Её духовным наставником был <strong>преподобный Серафим Вырицкий</strong>. В конце жизни Любушка переехала в Казанский монастырь в Вышнем Волочке, где скончалась 11 сентября 1997 года. Почитается как местночтимая подвижница.</p>`,
+    facts:["Жила в Сусанино с ~1983 года при Казанском храме","Духовная дочь преподобного Серафима Вырицкого","Почитается за прозорливость и исцеления"],
+    links:[{label:"Православие.ру: Любушка",url:"https://pravoslavie.ru/157926.html"},{label:"Wikipedia",url:"https://ru.wikipedia.org/wiki/Любушка_Сусанинская"}],
+    images:[]
+  },
+  {
+    id:8,emoji:"✍️",title:"Люди и культура",
+    subtitle:"Историк Глинка, Кшесинские и литературные связи",
+    text:`<p>С Сусанино связана жизнь <strong>Владислава Михайловича Глинки</strong> — историка, сотрудника Эрмитажа и Гатчинского дворца, автора книг «Военная галерея Зимнего дворца» и «Русский военный костюм». В блокаду он спасал коллекции Эрмитажа, а после войны первым из музейщиков прибыл в разрушенную Гатчину.</p>
+    <p>Неподалёку, в <strong>усадьбе Красницы</strong>, проводила лето семья <strong>Кшесинских</strong> — отец знаменитой балерины Матильды Кшесинской. По преданию, сюда приезжал и цесаревич Николай Александрович. Станция Семрино (рядом с Сусанино) упоминается в романе Шолохова <strong>«Тихий Дон»</strong> и мемуарах генералов Краснова и Деникина.</p>`,
+    facts:["В. М. Глинка — историк Эрмитажа, автор трудов о военном костюме","Усадьба Красницы — летняя дача семьи Кшесинских","Семрино — в «Тихом Доне» и белых мемуарах"],
+    links:[{label:"Глинка — наш земляк",url:"https://gatchina24.ru/gtn-pravda/2014/04/28/Nash_neizvestniy_izvestniy_zemlyak.html"},{label:"Усадьба Кшесинских",url:"https://dompolski-journal.ru/articles/article/210/"}],
+    images:[]
+  },
+  {
+    id:9,emoji:"🏡",title:"Сусанино сегодня",
+    subtitle:"Парк-сердце, дачи и современная жизнь",
+    text:`<p>Сегодня в Сусанино живут около <strong>4 000 человек</strong> (летом — больше за счёт дачников). Работают школа с этнографическим музеем «Русская изба», культурно-досуговый центр, библиотека, амбулатория. До Витебского вокзала Петербурга — около часа на электричке.</p>
+    <p>В сентябре <strong>2025 года</strong> открылся <strong>Сусанинский парк</strong> — новое общественное пространство вокруг пруда в форме сердца. Парк с прогулочными дорожками, скамейками, детскими площадками построен по федеральной программе «Формирование комфортной городской среды». Местные гордятся тишиной, природой и близостью к лесам. Работают футбольные и хоккейные команды, есть уличные тренажёры.</p>`,
+    facts:["~4 000 жителей, около 1 часа до Петербурга","Сусанинский парк (2025) — пруд в форме сердца","Школа, КДЦ, футбол, хоккей, уличные тренажёры"],
+    links:[{label:"Парк в Сусанино",url:"https://online47.ru/2025/09/16/v-susanino-otkrylsya-novyy-park-dlya-otdykha-zhiteley-221489"},{label:"Сусанинский КДЦ",url:"https://vk.com/sysaninokdc"},{label:"Сообщество посёлка",url:"https://vk.com/mysysanino"}],
+    images:[]
+  }
+];
+
+function renderCards(data){
+  const grid=document.getElementById('grid');
+  if(!data.length){grid.innerHTML='<div class="empty-search">Ничего не найдено 😔</div>';return}
+  grid.innerHTML=data.map(t=>`<div class="card" id="card-${t.id}" data-id="${t.id}">
+    <div class="card-header" onclick="toggleCard(${t.id})">
+      <div class="card-num">${t.emoji}</div>
+      <div class="card-title-wrap"><div class="card-title">${t.title}</div><div class="card-subtitle">${t.subtitle}</div></div>
+      <div class="card-arrow">▶</div>
+    </div>
+    <div class="card-body">
+      ${t.text}
+      <div class="audio-wrap"><audio controls preload="none" src="audio/topic-${String(t.id).padStart(2,'0')}.mp3"></audio></div>
+      ${t.images.length?`<div class="card-images">${t.images.map(u=>`<img src="${u}" alt="${t.title}" loading="lazy" onerror="this.parentElement.removeChild(this)">`).join('')}</div>`:''}
+      ${t.facts.length?`<div class="facts">${t.facts.map(f=>`<div class="fact">${f}</div>`).join('')}</div>`:''}
+      ${t.links.length?`<div class="links-list">${t.links.map(l=>`<a href="${l.url}" target="_blank">🔗 ${l.label}</a>`).join('')}</div>`:''}
+    </div>
+  </div>`).join('')
+}
+
+function toggleCard(id){document.getElementById('card-'+id).classList.toggle('active')}
+function filterCards(q){
+  const term=q.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(c=>{
+    const t=topics.find(t=>t.id===parseInt(c.dataset.id));
+    if(!term){c.style.display='';return}
+    c.style.display=(t.title+t.text+t.subtitle).toLowerCase().includes(term)?'':'none'
+  })
+}
+function toggleTheme(){
+  const html=document.documentElement;
+  const n=html.getAttribute('data-theme')==='light'?'dark':'light';
+  html.setAttribute('data-theme',n);localStorage.setItem('susanino-theme',n)
+}
+(function(){
+  const s=localStorage.getItem('susanino-theme');
+  if(s)document.documentElement.setAttribute('data-theme',s);
+  renderCards(topics)
+})()
+</script>
+</body>
+</html>
